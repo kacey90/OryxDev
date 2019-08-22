@@ -1,0 +1,28 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<h4 class="display-4">Dashboard</h4>
+<hr />
+
+<div class="row">
+    <div class="card-columns">
+        <div class="card bg-primary">
+            <div class="card-body">
+                <a asp-controller="Home" asp-action="UploadSalesOrder"><h4 class="card-title" style="color: #ffffff">Sales Orders</h4></a>
+                <p class="card-text">Some example text.</p>
+            </div>
+        </div>
+        <div class="card bg-warning">
+            <div class="card-body">
+                <a href="#"><h4 class="card-title" style="color: #ffffff">Purchase Order</h4></a>
+                <p class="card-text">Some example text.</p>
+            </div>
+        </div>
+        <div class="card bg-success">
+            <div class="card-body">
+                <a href="#"><h4 class="card-title" style="color: #ffffff">Stock Transfer</h4></a>
+                <p class="card-text">Some example text.</p>
+            </div>
+        </div>
+    </div>
+</div>

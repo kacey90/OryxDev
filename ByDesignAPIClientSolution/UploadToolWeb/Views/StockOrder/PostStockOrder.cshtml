@@ -1,0 +1,81 @@
+﻿@model ByDesignSoapClient.Api.Models.CustomerRequirementModel
+
+@{
+    ViewData["Title"] = "Post Stock Order";
+}
+
+@section Breadcrumbs{
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a asp-action="Index" asp-controller="Home">Home</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a asp-action="Index" asp-controller="StockOrder">Stock Orders</a>
+        </li>
+        <li class="breadcrumb-item active">Post Stock Order</li>
+        <!-- Breadcrumb Menu-->
+        <li class="breadcrumb-menu d-md-down-none">
+            <div class="btn-group" role="group" aria-label="Button group">
+                <a class="btn" href="~/lib/docs/StockOrderTransferTemplate.csv">
+                    <i class="icon-cloud-download"></i> <strong>Download CSV Template</strong>
+                </a>
+
+            </div>
+
+        </li>
+    </ol>
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                New <strong>Stock Transfer Order</strong>
+            </div>
+            <form asp-action="PostStockOrder" enctype="multipart/form-data" method="post">
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="ShipFromSiteID" class="control-label"></label>
+                        <input asp-for="ShipFromSiteID" class="form-control" />
+                        <span asp-validation-for="ShipFromSiteID" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ShipToSiteID" class="control-label"></label>
+                        <input asp-for="ShipToSiteID" class="form-control" />
+                        <span asp-validation-for="ShipToSiteID" class="text-danger"></span>
+                    </div>
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="CompleteDeliveryRequestedIndicator" /> @Html.DisplayNameFor(model => model.CompleteDeliveryRequestedIndicator)
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="DeliveryPriorityCode" class="control-label"></label>
+                        <select asp-for="DeliveryPriorityCode" class="form-control">
+                            <option selected disabled>Choose One</option>
+                            <option value="1">Immediate</option>
+                            <option value="2">Urgent</option>
+                            <option value="3">Normal</option>
+                            <option value="7">Low</option>
+                        </select>
+                        <span asp-validation-for="DeliveryPriorityCode" class="text-danger"></span>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label" for="file-input">Upload Template</label>
+                        <div class="col-md-9">
+                            <input type="file" asp-for="FileTemplate" name="FileTemplate">
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="card-footer">
+                    <div class="form-group">
+                        <input type="submit" value="Create" class="btn btn-primary" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

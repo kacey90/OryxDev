@@ -1,0 +1,51 @@
+﻿@{
+    ViewData["Title"] = "Upload Sales Order";
+}
+
+@section Breadcrumbs{
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a asp-action="Index" asp-controller="Home">Home</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a asp-action="Index" asp-controller="SalesOrder">Sales Orders</a>
+        </li>
+        <li class="breadcrumb-item active">Post Sales Order</li>
+        <!-- Breadcrumb Menu-->
+        <li class="breadcrumb-menu d-md-down-none">
+            <div class="btn-group" role="group" aria-label="Button group">
+                <a class="btn" href="~/lib/docs/sales_order_lines.csv">
+                    <i class="icon-cloud-download"></i> <strong>Download CSV Template</strong>
+                </a>
+
+            </div>
+
+        </li>
+    </ol>
+}
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                Upload <strong>Sales Order</strong>
+            </div>
+            <form asp-action="UploadSalesOrder" enctype="multipart/form-data">
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label" for="file-input">Upload Template</label>
+                        <div class="col-md-9">
+                            <input type="file" id="file-input" name="file">
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa fa-dot-circle-o"></i> Submit
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,106 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@section Breadcrumbs{
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">Current Tenant: <strong>@ViewData["BaseUrl"]</strong></li>
+        <li class="breadcrumb-item">Current User: <strong>@ViewData["User"]</strong></li>
+        <!-- Breadcrumb Menu-->
+        <li class="breadcrumb-menu d-md-down-none">
+            <div class="btn-group" role="group" aria-label="Button group">
+                <a class="btn" asp-area="" asp-controller="Home" asp-action="Index" asp-route-view="">
+                    <i class="icon-graph"></i>  Dashboard
+                </a>
+                <a class="btn" asp-area="" asp-controller="TenantSetting" asp-action="Index" asp-route-view="">
+                    <i class="icon-settings"></i>  Settings
+                </a>
+            </div>
+        </li>
+    </ol>
+}
+
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-sm-6 col-lg-3">
+            <div class="brand-card">
+                <div class="brand-card-header bg-primary">
+                    <div class="text-value">Sales Orders</div>
+                    <div class="chart-wrapper">
+                        <canvas id="social-box-chart-1" height="90"></canvas>
+                    </div>
+                </div>
+                <div class="brand-card-body">
+                    <div>
+                        <div class="text-value">120</div>
+                        <div class="text-uppercase text-muted small">local</div>
+                    </div>
+                    <div>
+                        <div class="text-value">10,000</div>
+                        <div class="text-uppercase text-muted small">ByDesign</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="brand-card">
+                <div class="brand-card-header bg-warning">
+                    <div class="text-value">Sales Quotes</div>
+                    <div class="chart-wrapper">
+                        <canvas id="social-box-chart-1" height="90"></canvas>
+                    </div>
+                </div>
+                <div class="brand-card-body">
+                    <div>
+                        <div class="text-value">430</div>
+                        <div class="text-uppercase text-muted small">local</div>
+                    </div>
+                    <div>
+                        <div class="text-value">45600</div>
+                        <div class="text-uppercase text-muted small">ByDesign</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="brand-card">
+                <div class="brand-card-header bg-danger">
+                    <div class="text-value">Purchase Orders</div>
+                    <div class="chart-wrapper">
+                        <canvas id="social-box-chart-1" height="90"></canvas>
+                    </div>
+                </div>
+                <div class="brand-card-body">
+                    <div>
+                        <div class="text-value">230</div>
+                        <div class="text-uppercase text-muted small">local</div>
+                    </div>
+                    <div>
+                        <div class="text-value">56300</div>
+                        <div class="text-uppercase text-muted small">ByDesign</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="brand-card">
+                <div class="brand-card-header bg-success">
+                    <div class="text-value">Stock Transfers</div>
+                    <div class="chart-wrapper">
+                        <canvas id="social-box-chart-1" height="90"></canvas>
+                    </div>
+                </div>
+                <div class="brand-card-body">
+                    <div>
+                        <div class="text-value">130</div>
+                        <div class="text-uppercase text-muted small">local</div>
+                    </div>
+                    <div>
+                        <div class="text-value">56333</div>
+                        <div class="text-uppercase text-muted small">ByDesign</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

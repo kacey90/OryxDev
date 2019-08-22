@@ -1,0 +1,132 @@
+﻿@model ByDesignSoapClient.Api.Models.SalesOrderViewModel
+
+@{
+    ViewData["Title"] = "PostSalesOrder";
+}
+
+@section Breadcrumbs{
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a asp-action="Index" asp-controller="Home">Home</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a asp-action="Index" asp-controller="SalesOrder">Sales Orders</a>
+        </li>
+        <li class="breadcrumb-item active">Post Sales Order</li>
+        <!-- Breadcrumb Menu-->
+        <li class="breadcrumb-menu d-md-down-none">
+            <div class="btn-group" role="group" aria-label="Button group">
+                <a class="btn" href="~/lib/docs/sales_order_lines.csv">
+                    <i class="icon-cloud-download"></i> <strong>Download CSV Template</strong>
+                </a>
+            </div>
+        </li>
+    </ol>
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                New <strong>Sales Order</strong>
+            </div>
+            <form asp-action="PostSalesOrder" enctype="multipart/form-data">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <label asp-for="ExternalReference" class="control-label"></label>
+                                <input asp-for="ExternalReference" class="form-control" />
+                                <span asp-validation-for="ExternalReference" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="BuyerParty" class="control-label"></label>
+                                <input asp-for="BuyerParty" class="form-control" />
+                                <span asp-validation-for="BuyerParty" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Description" class="control-label"></label>
+                                <input asp-for="Description" class="form-control" />
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="PostingDate" class="control-label"></label>
+                                <input asp-for="PostingDate" class="form-control" />
+                                <span asp-validation-for="PostingDate" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="RequestedStartDate" class="control-label"></label>
+                                <input asp-for="RequestedStartDate" class="form-control" />
+                                <span asp-validation-for="RequestedStartDate" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="RequestedEndDate" class="control-label"></label>
+                                <input asp-for="RequestedEndDate" class="form-control" />
+                                <span asp-validation-for="RequestedEndDate" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="DataOriginTypeCode" class="control-label"></label>
+                                <input asp-for="DataOriginTypeCode" class="form-control" />
+                                <span asp-validation-for="DataOriginTypeCode" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="DeliveryPriorityCode" class="control-label"></label>
+                                <input asp-for="DeliveryPriorityCode" class="form-control" />
+                                <span asp-validation-for="DeliveryPriorityCode" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="SalesUnit" class="control-label"></label>
+                                <input asp-for="SalesUnit" class="form-control" />
+                                <span asp-validation-for="SalesUnit" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="EmployeeResponsible" class="control-label"></label>
+                                <input asp-for="EmployeeResponsible" class="form-control" />
+                                <span asp-validation-for="EmployeeResponsible" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="FileTemplate" name="FileTemplate">Upload Line items</label>
+                        <div class="col-md-9">
+                            <input type="file" name="FileTemplate">
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa fa-dot-circle-o"></i> Submit
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

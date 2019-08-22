@@ -1,0 +1,9 @@
+﻿<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:glob="http://sap.com/xi/SAPGlobal20/Global" xmlns:glob1="http://sap.com/xi/A1S/Global">
+  <soapenv:Header/>
+  <soapenv:Body>
+    <glob:PurchaseOrderBundleMaintainRequest_sync>
+      <BasicMessageHeader />
+      
+    </glob:PurchaseOrderBundleMaintainRequest_sync>
+  </soapenv:Body>
+</soapenv:Envelope>

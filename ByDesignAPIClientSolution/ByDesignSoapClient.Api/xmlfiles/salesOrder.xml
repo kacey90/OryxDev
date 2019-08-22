@@ -1,0 +1,14 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:glob="http://sap.com/xi/SAPGlobal20/Global" xmlns:glob1="http://sap.com/xi/AP/Globalization">
+  <soapenv:Header />
+  <soapenv:Body>
+    <glob:SalesOrderBundleMaintainRequest_sync>
+      <BasicMessageHeader />
+      <SalesOrder>
+<ObjectNodeSenderTechnicalID>A0001</ObjectNodeSenderTechnicalID><Name>Ace Medicare hosp</Name><DataOriginTypeCode>1</DataOriginTypeCode><BillToParty><PartyID>1000272</PartyID></BillToParty><SalesUnitParty><PartyID>N1100</PartyID></SalesUnitParty><RequestedFulfillmentPeriodPeriodTerms><StartDateTime>2019-07-16</StartDateTime><EndDateTime>2019-07-20</EndDateTime></RequestedFulfillmentPeriodPeriodTerms><DeliveryTerms><DeliveryPriorityCode>1</DeliveryPriorityCode></DeliveryTerms><PricingTerms><GrossAmountIndicator>false</GrossAmountIndicator></PricingTerms><Item><ID>10</ID><ProcessingTypeCode>TAN</ProcessingTypeCode><ItemProduct><ProductID>106837</ProductID></ItemProduct><ItemScheduleLine><Quantity unitCode="XCT">250</Quantity></ItemScheduleLine></Item>
+</SalesOrder>
+<SalesOrder>
+<ObjectNodeSenderTechnicalID>A0002</ObjectNodeSenderTechnicalID><Name>Alchamist Zambia Ltd</Name><DataOriginTypeCode>1</DataOriginTypeCode><BillToParty><PartyID>1000677</PartyID></BillToParty><SalesUnitParty><PartyID>Z1100</PartyID></SalesUnitParty><RequestedFulfillmentPeriodPeriodTerms><StartDateTime>2019-07-18</StartDateTime><EndDateTime>2019-07-18</EndDateTime></RequestedFulfillmentPeriodPeriodTerms><DeliveryTerms><DeliveryPriorityCode>1</DeliveryPriorityCode></DeliveryTerms><PricingTerms><GrossAmountIndicator>false</GrossAmountIndicator></PricingTerms><Item><ID>10</ID><ProcessingTypeCode>TAN</ProcessingTypeCode><ItemProduct><ProductID>106461</ProductID></ItemProduct><ItemScheduleLine><Quantity unitCode="XCT">300</Quantity></ItemScheduleLine></Item>
+</SalesOrder>
+</glob:SalesOrderBundleMaintainRequest_sync>
+  </soapenv:Body>
+</soapenv:Envelope>
