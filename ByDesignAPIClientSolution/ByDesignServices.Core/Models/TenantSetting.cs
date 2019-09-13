@@ -11,50 +11,14 @@ namespace ByDesignServices.Core.Models
     [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
     public class TenantSetting
     {
-        private string baseUrlField;
-
-        private string userField;
-
-        private string passwordField;
-
         [Required]
-        public string User
-        {
-            get
-            {
-                return this.userField;
-            }
-            set
-            {
-                this.userField = value;
-            }
-        }
+        public string User { get; set; }
 
         /// <remarks/>
         [Required]
-        public string Password
-        {
-            get
-            {
-                return this.passwordField;
-            }
-            set
-            {
-                this.passwordField = value;
-            }
-        }
+        public string Password { get; set; }
 
         [Required]
-        public string BaseUrl
-        {
-            get
-            {
-                return this.baseUrlField;
-            }
-            set
-            {
-                this.baseUrlField = value;
-            }
-        }
+        public string BaseUrl { get; set; }
     }
 }

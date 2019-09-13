@@ -43,6 +43,7 @@ namespace UploadToolWeb.Controllers
             model.Sites = await GetSitesList();
             model.Locations = await GetLocationsList();
             model.Employees = await GetEmployeesList();
+            model.Accounts = await GetAccountsList();
             return View(model);
         }
 
@@ -90,6 +91,23 @@ namespace UploadToolWeb.Controllers
                 {
                     Value = x.ID,
                     Text = x.DisplayItem
+                });
+
+                return new List<SelectListItem>(list);
+            }
+            return new List<SelectListItem>();
+        }
+
+        private async Task<IEnumerable<SelectListItem>> GetAccountsList()
+        {
+            var response = await _apiClient.HttpClient.GetAsync("Backend/loadcustomers");
+            if (response.IsSuccessStatusCode)
+            {
+                var data = await response.Content.ReadAsAsync<List<ByDCustomerDto>>();
+                var list = data.Select(x => new SelectListItem
+                {
+                    Value = x.SAPId,
+                    Text = x.FullName
                 });
 
                 return new List<SelectListItem>(list);

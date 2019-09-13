@@ -40,15 +40,23 @@ namespace UploadToolWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                var response = await _apiClient.HttpClient.PostAsJsonAsync("TenantSetting/SaveSetting", tenantSetting);
+                var obj = new TenantSettingDto { BaseUrl = tenantSetting.BaseUrl, Password = tenantSetting.Password, User = tenantSetting.User };
+                var response = await _apiClient.HttpClient.PostAsJsonAsync("TenantSetting/SaveSetting", obj);
                 if (response.IsSuccessStatusCode)
                 {
                     _toastNotification.AddSuccessToastMessage("Success!");
-                    return View(tenantSetting);
+                    return RedirectToAction(nameof(Index));
                 }
                 
             }
             return View();
         }
+    }
+
+    public class TenantSettingDto
+    {
+        public string BaseUrl { get; set; }
+        public string User { get; set; }
+        public string Password { get; set; }
     }
 }
