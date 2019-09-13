@@ -1,0 +1,12 @@
+﻿<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:glob="http://sap.com/xi/SAPGlobal20/Global">
+  <soapenv:Header/>
+  <soapenv:Body>
+    <glob:CustomerByElementsQuery_sync>
+      <SelectionBySearchText>*</SelectionBySearchText>
+      <ProcessingConditions>
+        <QueryHitsMaximumNumberValue>1000</QueryHitsMaximumNumberValue>
+        <QueryHitsUnlimitedIndicator>false</QueryHitsUnlimitedIndicator>
+      </ProcessingConditions>
+    </glob:CustomerByElementsQuery_sync>
+  </soapenv:Body>
+</soapenv:Envelope>

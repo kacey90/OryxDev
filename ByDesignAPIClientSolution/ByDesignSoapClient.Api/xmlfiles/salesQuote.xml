@@ -1,0 +1,11 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:glob="http://sap.com/xi/SAPGlobal20/Global">
+  <soapenv:Header />
+  <soapenv:Body>
+    <glob:CustomerQuoteBundleMaintainRequest_sync>
+      <BasicMessageHeader />
+      <CustomerQuote>
+<ObjectNodeSenderTechnicalID>S0366</ObjectNodeSenderTechnicalID><BuyerID>S0366</BuyerID><PostingDate>2019-09-11T00:00:00Z</PostingDate><DataOriginTypeCode>4</DataOriginTypeCode><AccountParty><PartyID>1000165</PartyID></AccountParty><BillToParty><PartyID>1000165</PartyID></BillToParty><EmployeeResponsibleParty><PartyID>7000000</PartyID></EmployeeResponsibleParty><SalesUnitParty><PartyID>G1100</PartyID></SalesUnitParty><SalesAndServiceBusinessArea><DistributionChannelCode>01</DistributionChannelCode></SalesAndServiceBusinessArea><RequestedFulfillmentPeriodPeriodTerms><StartDateTime timeZoneCode="UTC+1">2019-09-12T00:00:00Z</StartDateTime></RequestedFulfillmentPeriodPeriodTerms><Items itemScheduleLineListCompleteTransmissionIndicator="true"><ID>10</ID><ItemProduct><ProductInternalID>110354</ProductInternalID></ItemProduct><ItemScheduleLine><Quantity unitCode="XCT">900</Quantity></ItemScheduleLine><PriceAndTaxCalculationItem><TaxationCharacteristicsCode listID="1">310</TaxationCharacteristicsCode></PriceAndTaxCalculationItem></Items>
+</CustomerQuote>
+</glob:CustomerQuoteBundleMaintainRequest_sync>
+  </soapenv:Body>
+</soapenv:Envelope>

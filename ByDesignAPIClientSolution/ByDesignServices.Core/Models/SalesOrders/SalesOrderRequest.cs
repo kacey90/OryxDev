@@ -14,6 +14,13 @@ namespace ByDesignServices.Core.Models.SalesOrders
         public string Text { get; set; }
     }
 
+    [XmlRoot(ElementName = "AccountParty")]
+    public class AccountParty
+    {
+        [XmlElement(ElementName = "PartyID")]
+        public string PartyID { get; set; }
+    }
+
     [XmlRoot(ElementName = "BillToParty")]
     public class BillToParty
     {
@@ -23,11 +30,29 @@ namespace ByDesignServices.Core.Models.SalesOrders
         public string ActionCode { get; set; }
     }
 
+    [XmlRoot(ElementName = "EmployeeResponsibleParty")]
+    public class EmployeeResponsibleParty
+    {
+        [XmlElement(ElementName = "PartyID")]
+        public string PartyID { get; set; }
+        [XmlAttribute(AttributeName = "partyContactPartyListCompleteTransmissionIndicator")]
+        public string PartyContactPartyListCompleteTransmissionIndicator { get; set; }
+    }
+
     [XmlRoot(ElementName = "SalesUnitParty")]
     public class SalesUnitParty
     {
         [XmlElement(ElementName = "PartyID")]
         public string PartyID { get; set; }
+        [XmlAttribute(AttributeName = "actionCode")]
+        public string ActionCode { get; set; }
+    }
+
+    [XmlRoot(ElementName = "SalesAndServiceBusinessArea")]
+    public class SalesAndServiceBusinessArea
+    {
+        [XmlElement(ElementName = "DistributionChannelCode")]
+        public string DistributionChannelCode { get; set; }
         [XmlAttribute(AttributeName = "actionCode")]
         public string ActionCode { get; set; }
     }
@@ -115,6 +140,54 @@ namespace ByDesignServices.Core.Models.SalesOrders
         public string ActionCode { get; set; }
     }
 
+    [XmlRoot(ElementName = "LocationID")]
+    public class LocationID
+    {
+        [XmlAttribute(AttributeName = "schemeID")]
+        public string SchemeID { get; set; }
+        [XmlAttribute(AttributeName = "schemeAgencyID")]
+        public string SchemeAgencyID { get; set; }
+        [XmlAttribute(AttributeName = "schemeAgencySchemeID")]
+        public string SchemeAgencySchemeID { get; set; }
+        [XmlAttribute(AttributeName = "schemeAgencySchemeAgencyID")]
+        public string SchemeAgencySchemeAgencyID { get; set; }
+        [XmlText]
+        public string Text { get; set; }
+    }
+
+    [XmlRoot(ElementName = "ShipFromItemLocation")]
+    public class ShipFromItemLocation
+    {
+        public ShipFromItemLocation()
+        {
+            LocationID = new LocationID();
+        }
+        [XmlElement(ElementName = "LocationID")]
+        public LocationID LocationID { get; set; }
+        [XmlAttribute(AttributeName = "actionCode")]
+        public string ActionCode { get; set; }
+    }
+
+    [XmlRoot(ElementName = "TaxationCharacteristicsCode")]
+    public class TaxationCharacteristicsCode
+    {
+        [XmlAttribute(AttributeName = "listID")]
+        public string ListID { get; set; }
+        [XmlText]
+        public string Text { get; set; }
+    }
+
+    [XmlRoot(ElementName = "PriceAndTaxCalculationItem")]
+    public class PriceAndTaxCalculationItem
+    {
+        public PriceAndTaxCalculationItem()
+        {
+            TaxationCharacteristicsCode = new TaxationCharacteristicsCode();
+        }
+        [XmlElement(ElementName = "TaxationCharacteristicsCode")]
+        public TaxationCharacteristicsCode TaxationCharacteristicsCode { get; set; }
+    }
+
     [XmlRoot(ElementName = "Item")]
     public class Item
     {
@@ -122,6 +195,8 @@ namespace ByDesignServices.Core.Models.SalesOrders
         {
             ItemProduct = new ItemProduct();
             ItemScheduleLine = new ItemScheduleLine();
+            ShipFromItemLocation = new ShipFromItemLocation();
+            PriceAndTaxCalculationItem = new PriceAndTaxCalculationItem();
         }
         [XmlElement(ElementName = "ObjectNodeSenderTechnicalID")]
         public string ObjectNodeSenderTechnicalID { get; set; }
@@ -133,6 +208,10 @@ namespace ByDesignServices.Core.Models.SalesOrders
         public ItemProduct ItemProduct { get; set; }
         [XmlElement(ElementName = "ItemScheduleLine")]
         public ItemScheduleLine ItemScheduleLine { get; set; }
+        [XmlElement(ElementName = "ShipFromItemLocation")]
+        public ShipFromItemLocation ShipFromItemLocation { get; set; }
+        [XmlElement(ElementName = "PriceAndTaxCalculationItem")]
+        public PriceAndTaxCalculationItem PriceAndTaxCalculationItem { get; set; }
         [XmlAttribute(AttributeName = "actionCode")]
         public string ActionCode { get; set; }
     }
@@ -144,8 +223,11 @@ namespace ByDesignServices.Core.Models.SalesOrders
         {
             Name = new Name();
             BillToParty = new BillToParty();
+            AccountParty = new AccountParty();
             SalesUnitParty = new SalesUnitParty();
+            EmployeeResponsibleParty = new EmployeeResponsibleParty();
             RequestedFulfillmentPeriodPeriodTerms = new RequestedFulfillmentPeriodPeriodTerms();
+            SalesAndServiceBusinessArea = new SalesAndServiceBusinessArea();
             DeliveryTerms = new DeliveryTerms();
             PricingTerms = new PricingTerms();
             Items = new List<Item>();
@@ -162,10 +244,16 @@ namespace ByDesignServices.Core.Models.SalesOrders
         public Name Name { get; set; }
         [XmlElement(ElementName = "DataOriginTypeCode")]
         public string DataOriginTypeCode { get; set; }
+        [XmlElement(ElementName = "AccountParty")]
+        public AccountParty AccountParty { get; set; }
         [XmlElement(ElementName = "BillToParty")]
         public BillToParty BillToParty { get; set; }
         [XmlElement(ElementName = "SalesUnitParty")]
         public SalesUnitParty SalesUnitParty { get; set; }
+        [XmlElement(ElementName = "SalesAndServiceBusinessArea")]
+        public SalesAndServiceBusinessArea SalesAndServiceBusinessArea { get; set; }
+        [XmlElement(ElementName = "EmployeeResponsibleParty")]
+        public EmployeeResponsibleParty EmployeeResponsibleParty { get; set; }
         [XmlElement(ElementName = "RequestedFulfillmentPeriodPeriodTerms")]
         public RequestedFulfillmentPeriodPeriodTerms RequestedFulfillmentPeriodPeriodTerms { get; set; }
         [XmlElement(ElementName = "DeliveryTerms")]

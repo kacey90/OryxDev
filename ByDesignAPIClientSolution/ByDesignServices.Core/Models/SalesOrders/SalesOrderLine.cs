@@ -11,5 +11,7 @@ namespace ByDesignServices.Core.Models.SalesOrders
         public string ProductId { get; set; }
         public string Quantity { get; set; }
         public string QuantityUnitCode { get; set; }
+        public string ShipFromLocationId { get; set; }
+        public string TaxCode { get; set; }
     }
 }

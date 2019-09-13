@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using ByDesignServices.Core.Models.SalesQuotes;
 using ByDesignServices.Core.Models.StockTransfers;
 using ByDesignServices.Core.Services;
 using ByDesignSoapClient.Api.Models;
@@ -44,8 +45,18 @@ namespace ByDesignSoapClient.Api.Controllers
                     {
                         ShipFromSiteID = model.ShipFromSiteID,
                         ShipToSiteID = model.ShipToSiteID,
+                        ShipToLocationID = model.ShipToLocationID,
                         CompleteDeliveryRequestedIndicator = model.CompleteDeliveryRequestedIndicator ? "true" : "false",
-                        DeliveryPriorityCode = model.DeliveryPriorityCode
+                        DeliveryPriorityCode = model.DeliveryPriorityCode,
+                        RaiseSalesQuote = model.RaiseSalesQuote,
+                        AccountId = model.AccountId,
+                        Description = model.Description,
+                        DistributionChannelCode = model.DistributionChannelCode,
+                        EmployeeResponsible = model.EmployeeResponsible,
+                        ExternalReference = model.ExternalReference,
+                        PostingDate = model.PostingDate.Value,
+                        SalesUnitId = model.SalesUnitId,
+                        RequestedDate = model.RequestedDate.Value
                     });
 
                     if (response != null)

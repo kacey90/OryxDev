@@ -2,14 +2,8 @@
   <soapenv:Header />
   <soapenv:Body>
     <glob:CustReqBundleMaintainRequest_sync>
-      <CustomerRequirement>
-<ShipFromSiteID>G1000</ShipFromSiteID><ShipToSiteID>G2000</ShipToSiteID><CompleteDeliveryRequestedIndicator>true</CompleteDeliveryRequestedIndicator><DeliveryPriorityCode>3</DeliveryPriorityCode><ExternalRquestItem><ObjectNodeSenderTechnicalID>1010</ObjectNodeSenderTechnicalID><ItemID>10</ItemID><ProductKey><ProductTypeCode /><ProductIdentifierTypeCode /><ProductID>106749</ProductID></ProductKey><RequestedQuantity>1000</RequestedQuantity><RequestedLocalDateTime timeZoneCode="UTC">2019-10-10T00:00:00Z</RequestedLocalDateTime><Description languageCode="EN">Zestril 10 MG x28</Description></ExternalRquestItem>
-</CustomerRequirement>
-<CustomerRequirement>
-<ShipFromSiteID>G1000</ShipFromSiteID><ShipToSiteID>G2000</ShipToSiteID><CompleteDeliveryRequestedIndicator>true</CompleteDeliveryRequestedIndicator><DeliveryPriorityCode>3</DeliveryPriorityCode><ExternalRquestItem><ObjectNodeSenderTechnicalID>1011</ObjectNodeSenderTechnicalID><ItemID>20</ItemID><ProductKey><ProductTypeCode /><ProductIdentifierTypeCode /><ProductID>106461</ProductID></ProductKey><RequestedQuantity>500</RequestedQuantity><RequestedLocalDateTime timeZoneCode="UTC">2019-10-03T00:00:00Z</RequestedLocalDateTime><Description languageCode="EN">Request From Facilities</Description></ExternalRquestItem>
-</CustomerRequirement>
-<CustomerRequirement>
-<ShipFromSiteID>G1000</ShipFromSiteID><ShipToSiteID>G2000</ShipToSiteID><CompleteDeliveryRequestedIndicator>true</CompleteDeliveryRequestedIndicator><DeliveryPriorityCode>3</DeliveryPriorityCode><ExternalRquestItem><ObjectNodeSenderTechnicalID>1012</ObjectNodeSenderTechnicalID><ItemID>30</ItemID><ProductKey><ProductTypeCode /><ProductIdentifierTypeCode /><ProductID>106746</ProductID></ProductKey><RequestedQuantity>3500</RequestedQuantity><RequestedLocalDateTime timeZoneCode="UTC">2019-10-24T00:00:00Z</RequestedLocalDateTime><Description languageCode="EN">Xalacom Eye Drop 2.5 ML x1</Description></ExternalRquestItem>
+      <CustomerRequirement ActionCode="01">
+<ShipFromSiteID>G1000</ShipFromSiteID><ShipToSiteID>G2000</ShipToSiteID><ShipToLocationID>1000151</ShipToLocationID><CompleteDeliveryRequestedIndicator>true</CompleteDeliveryRequestedIndicator><DeliveryPriorityCode>3</DeliveryPriorityCode><ExternalRquestItem><ObjectNodeSenderTechnicalID>1010</ObjectNodeSenderTechnicalID><ItemID>10</ItemID><ProductKey><ProductTypeCode /><ProductIdentifierTypeCode /><ProductID>110354</ProductID></ProductKey><RequestedQuantity unitCode="XCT">900</RequestedQuantity><RequestedLocalDateTime timeZoneCode="UTC+1">2019-09-03T00:00:00Z</RequestedLocalDateTime><Description languageCode="EN">Warfarin (Teva) 3mg x28</Description></ExternalRquestItem>
 </CustomerRequirement>
 </glob:CustReqBundleMaintainRequest_sync>
   </soapenv:Body>

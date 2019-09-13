@@ -25,7 +25,13 @@
 
 
   <ItemGroup>
-    <Content Update="wwwroot\lib\docs\sales_order_lines.csv">
+    <Content Update="wwwroot\lib\docs\SalesOrderUploadTemplate.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\lib\docs\SOLineItemsTemplate.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\lib\docs\StockOrderTransferTemplate.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

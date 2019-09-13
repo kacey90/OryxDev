@@ -3,6 +3,7 @@ using ByDesignServices.Core.Models.CsvMapping;
 using ByDesignServices.Core.Models.PurchaseOrders;
 using ByDesignServices.Core.Models.PurchaseOrders.PO;
 using ByDesignServices.Core.Models.SalesOrders;
+using ByDesignServices.Core.Models.SalesQuotes;
 using ByDesignServices.Core.Models.StockTransfers;
 using ByDesignServices.Core.Utilities;
 using CsvHelper;
@@ -17,6 +18,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using static ByDesignServices.Core.Models.SalesQuotes.SalesQuote;
 
 namespace ByDesignServices.Core.Services
 {
@@ -37,7 +39,7 @@ namespace ByDesignServices.Core.Services
 
 
 
-        public async Task<Tuple<int, Stream>> UploadSalesOrderAsync(MemoryStream memoryStream)
+        public async Task<Stream> UploadSalesOrderAsync(MemoryStream memoryStream)
         {
             IDictionary<Stream, string> streams = new Dictionary<Stream, string>();
             using (ZipArchive archive = new ZipArchive(memoryStream))
@@ -62,7 +64,7 @@ namespace ByDesignServices.Core.Services
                         }
                         else
                         {
-                            csv.Configuration.RegisterClassMap<SalesOrderLineMapping>();
+                            csv.Configuration.RegisterClassMap<BulkSalesOrderLineMapping>();
                             lineItemRecords.AddRange(csv.GetRecords<SalesOrderLine>());
                         }
                     }
@@ -74,18 +76,23 @@ namespace ByDesignServices.Core.Services
                 {
                     //var provider = new CultureInfo("en-GB");
                     var startDate = DateTime.ParseExact(header.StartDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                    var endDate = DateTime.ParseExact(header.EndDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    var postingDate = DateTime.ParseExact(header.PostingDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
 
                     var salesOrder = new SalesOrder();
                     salesOrder.ObjectNodeSenderTechnicalID = header.ExternalReference;
                     salesOrder.Name.Text = header.Name;
-                    salesOrder.DataOriginTypeCode = header.DataOriginTypeCode;
-                    salesOrder.DeliveryTerms.DeliveryPriorityCode = header.DeliveryPriorityCode;
+                    salesOrder.DataOriginTypeCode = "4";
+                    salesOrder.DeliveryTerms.DeliveryPriorityCode = GetDeliveryPriorityValue(header.DeliveryPriorityCode);
+                    salesOrder.SalesAndServiceBusinessArea.DistributionChannelCode = GetDistributionChannelValue(header.DistributionChannelCode);
                     salesOrder.SalesUnitParty.PartyID = header.SalesUnitPartyId;
                     salesOrder.BillToParty.PartyID = header.BuyerPartyId;
+                    salesOrder.AccountParty.PartyID = header.BuyerPartyId;
                     salesOrder.PricingTerms.GrossAmountIndicator = "false";
-                    salesOrder.RequestedFulfillmentPeriodPeriodTerms.StartDateTime.Text = startDate.ToString("yyyy-MM-dd");
-                    salesOrder.RequestedFulfillmentPeriodPeriodTerms.EndDateTime.Text = endDate.ToString("yyyy-MM-dd");
+                    salesOrder.RequestedFulfillmentPeriodPeriodTerms.StartDateTime.Text = Convert.ToDateTime(startDate).ToString("s") + "Z";
+                    salesOrder.RequestedFulfillmentPeriodPeriodTerms.StartDateTime.TimeZoneCode = "UTC+1";
+                    salesOrder.PostingDate = Convert.ToDateTime(postingDate).ToString("s") + "Z";
+                    salesOrder.EmployeeResponsibleParty.PartyID = header.EmployeeResponsible;
+                    //salesOrder.RequestedFulfillmentPeriodPeriodTerms.EndDateTime.Text = endDate.ToString("yyyy-MM-dd");
 
                     var lineItems = lineItemRecords.FindAll(x => x.ExternalReference == header.ExternalReference);
                     foreach (var line in lineItems)
@@ -93,10 +100,13 @@ namespace ByDesignServices.Core.Services
                         int lineItemId = 10;
                         var item = new Models.SalesOrders.Item();
                         item.ID = lineItemId.ToString();
-                        item.ProcessingTypeCode = line.ProcessingTypeCode;
+                        item.ProcessingTypeCode = "TAN";
                         item.ItemProduct.ProductID = line.ProductId;
                         item.ItemScheduleLine.Quantity.Text = line.Quantity;
                         item.ItemScheduleLine.Quantity.UnitCode = line.QuantityUnitCode;
+                        item.PriceAndTaxCalculationItem.TaxationCharacteristicsCode.Text = line.TaxCode;
+                        item.PriceAndTaxCalculationItem.TaxationCharacteristicsCode.ListID = "1";
+                        item.ShipFromItemLocation.LocationID.Text = line.ShipFromLocationId;
 
                         salesOrder.Items.Add(item);
                         lineItemId = lineItemId + 10;
@@ -160,71 +170,54 @@ namespace ByDesignServices.Core.Services
                     if (response.IsSuccessStatusCode)
                     {
                         var responseData = await response.Content.ReadAsStreamAsync();
-                        return Tuple.Create((int)response.StatusCode, responseData);
+                        return responseData;
                     }
                 }
-
-
-                //_client.HttpClient.BaseAddress = new Uri(tenantSetting.BaseUrl);
-                //var basicAuth = Encoding.ASCII.GetBytes($"{tenantSetting.User}:{tenantSetting.Password}");
-                //_client.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(basicAuth));
-                //_client.HttpClient.DefaultRequestHeaders.Add("x-csrf-token", "fetch");
-
-                ////get csrf-token
-                //var tokenRequest = await _client.HttpClient.GetAsync("/sap/byd/odata/cust/v1/khsalesorder/");
-                //var csrfToken = tokenRequest.Headers.GetValues("x-csrf-token").FirstOrDefault();
-
-                ////client.DefaultRequestHeaders.Accept.Clear();
-                ////client.DefaultRequestHeaders.Clear();
-                ////client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                //_client.HttpClient.DefaultRequestHeaders.Add("x-csrf-token", csrfToken);
-
-                //var httpContent = new StringContent(soJson, Encoding.UTF8, "application/json");
-
-                ////dynamic dynamicObj = JsonConvert.DeserializeObject<dynamic>(soJson);
-
-                //var salesOrderRequest = await _client.HttpClient.PostAsync("/sap/byd/odata/cust/v1/khsalesorder/SalesOrderCollection", httpContent);
-                //if (salesOrderRequest.IsSuccessStatusCode)
-                //{
-                //    var response = await salesOrderRequest.Content.ReadAsStreamAsync();
-                //    return response;
-                //}
             }
 
             return null;
         }
 
-        public async Task<Tuple<int, Stream>> PostSalesOrder(MemoryStream memoryStream, SalesOrderHeader model)
+        public async Task<Stream> PostSalesOrder(MemoryStream memoryStream, SalesOrderHeader model)
         {
             var lineItemRecords = new List<SalesOrderLine>();
             var startDate = DateTime.ParseExact(model.StartDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-            var endDate = DateTime.ParseExact(model.EndDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            //var endDate = DateTime.ParseExact(model.EndDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
             var salesOrder = new SalesOrder();
             salesOrder.ObjectNodeSenderTechnicalID = model.ExternalReference;
             salesOrder.Name.Text = model.Name;
+            salesOrder.BuyerID = model.ExternalReference;
             salesOrder.DataOriginTypeCode = model.DataOriginTypeCode;
             salesOrder.DeliveryTerms.DeliveryPriorityCode = model.DeliveryPriorityCode;
+            salesOrder.SalesAndServiceBusinessArea.DistributionChannelCode = model.DistributionChannelCode;
             salesOrder.SalesUnitParty.PartyID = model.SalesUnitPartyId;
-            salesOrder.BillToParty.PartyID = model.BuyerPartyId;
+            salesOrder.AccountParty.PartyID = model.AccountId;
+            salesOrder.BillToParty.PartyID = model.AccountId;
+            salesOrder.EmployeeResponsibleParty.PartyID = model.EmployeeResponsible;
+            salesOrder.PostingDate = Convert.ToDateTime(model.PostingDate).ToString("s") + "Z";
             salesOrder.PricingTerms.GrossAmountIndicator = "false";
-            salesOrder.RequestedFulfillmentPeriodPeriodTerms.StartDateTime.Text = startDate.ToString("yyyy-MM-dd");
-            salesOrder.RequestedFulfillmentPeriodPeriodTerms.EndDateTime.Text = endDate.ToString("yyyy-MM-dd");
+            salesOrder.RequestedFulfillmentPeriodPeriodTerms.StartDateTime.Text = Convert.ToDateTime(model.StartDate).ToString("s") + "Z";
+            salesOrder.RequestedFulfillmentPeriodPeriodTerms.StartDateTime.TimeZoneCode = "UTC+1";
+            //salesOrder.RequestedFulfillmentPeriodPeriodTerms.EndDateTime.Text = endDate.ToString("yyyy-MM-dd");
 
             using (var reader = new StreamReader(memoryStream))
             using (var csv = new CsvReader(reader))
             {
                 csv.Configuration.RegisterClassMap<SalesOrderLineMapping>();
                 lineItemRecords.AddRange(csv.GetRecords<SalesOrderLine>());
-
+                int lineItemId = 10;
                 foreach (var lineItem in lineItemRecords)
                 {
-                    int lineItemId = 10;
                     var item = new Models.SalesOrders.Item();
                     item.ID = lineItemId.ToString();
-                    item.ProcessingTypeCode = lineItem.ProcessingTypeCode;
+                    item.ProcessingTypeCode = "TAN";
+                    item.ShipFromItemLocation.LocationID.Text = lineItem.ShipFromLocationId;
+                    //item.ShipFromItemLocation.ActionCode = "01";
                     item.ItemProduct.ProductID = lineItem.ProductId;
                     item.ItemScheduleLine.Quantity.Text = lineItem.Quantity;
                     item.ItemScheduleLine.Quantity.UnitCode = lineItem.QuantityUnitCode;
+                    item.PriceAndTaxCalculationItem.TaxationCharacteristicsCode.Text = lineItem.TaxCode;
+                    item.PriceAndTaxCalculationItem.TaxationCharacteristicsCode.ListID = "1";
 
                     salesOrder.Items.Add(item);
                     lineItemId += 10;
@@ -252,20 +245,21 @@ namespace ByDesignServices.Core.Services
                     var nsmgr1 = new XmlNamespaceManager(subDoc.NameTable);
                     nsmgr1.AddNamespace("xsd", "http://www.w3.org/2001/XMLSchema");
                     nsmgr1.AddNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
-                    //var salesOrderListNodes = subDoc.SelectNodes("//SalesOrderList/SalesOrder", nsmgr1);
-                    //var sb = new StringBuilder();
-                    //foreach (XmlNode child in salesOrderListNodes)
-                    //{
-                    //    sb.AppendLine("<SalesOrder>");
-                    //    sb.AppendLine(child.InnerXml);
-                    //    sb.AppendLine("</SalesOrder>");
-                    //}
-                    //var res = sb.ToString();
-                    //element.InnerXml = sb.ToString();
+                    var salesOrderNode = subDoc.SelectSingleNode("//SalesOrder", nsmgr1);
+                    var sb = new StringBuilder();
+                    sb.AppendLine("<SalesOrder>");
+                    sb.AppendLine(salesOrderNode.InnerXml);
+                    sb.AppendLine("</SalesOrder>");
+                    element.InnerXml = sb.ToString();
+
+                    
 
                     var basicMsgNode = doc.CreateNode(XmlNodeType.Element, "BasicMessageHeader", null);
-                    XmlNode salesOrderNode = doc.SelectSingleNode("//SalesOrder");
-                    element.InsertBefore(basicMsgNode, salesOrderNode);
+                    XmlNode salesOrderNode2 = doc.SelectSingleNode("//SalesOrder");
+                    element.InsertBefore(basicMsgNode, salesOrderNode2);
+                    //XmlAttribute attribute = salesOrderNode2.OwnerDocument.CreateAttribute("actionCode");
+                    //attribute.Value = "01";
+                    //salesOrderNode2.Attributes.Append(attribute);
                     doc.Save(filePath);
 
                     StreamReader sr = new StreamReader(filePath);
@@ -286,11 +280,8 @@ namespace ByDesignServices.Core.Services
                     if (response.IsSuccessStatusCode)
                     {
                         var responseData = await response.Content.ReadAsStreamAsync();
-                        return Tuple.Create((int)response.StatusCode, responseData);
+                        return responseData;
                     }
-
-                    var errorResponse = await response.Content.ReadAsStreamAsync();
-                    return Tuple.Create((int)response.StatusCode, errorResponse);
                 }
             }
             return null;
@@ -583,7 +574,7 @@ namespace ByDesignServices.Core.Services
             return null;
         }
 
-        public async Task<Tuple<int, Stream>> UploadStockTransfer(MemoryStream memoryStream, StockTransferModel model)
+        public async Task<Stream> UploadStockTransfer(MemoryStream memoryStream, StockTransferModel model)
         {
             var lineObjectDocId = 1010;
             var stockOrderTransfers = new List<StockTransferModel>();
@@ -594,6 +585,7 @@ namespace ByDesignServices.Core.Services
                 stockOrderTransfers.AddRange(csv.GetRecords<StockTransferModel>());
             }
 
+            List<SalesQuoteLine> quotesLineItems = new List<SalesQuoteLine>();
             var itemId = 10;
             CustomerRequirementList customerRequirements = new CustomerRequirementList();
             foreach (var record in stockOrderTransfers)
@@ -603,6 +595,7 @@ namespace ByDesignServices.Core.Services
                 customerRequirement.ObjectNodeSenderTechnicalID = record.ObjectNodeSenderTechnicalID;
                 customerRequirement.ShipFromSiteID = model.ShipFromSiteID;
                 customerRequirement.ShipToSiteID = model.ShipToSiteID;
+                customerRequirement.ShipToLocationID = model.ShipToLocationID;
                 customerRequirement.CompleteDeliveryRequestedIndicator = model.CompleteDeliveryRequestedIndicator;
                 customerRequirement.DeliveryPriorityCode = model.DeliveryPriorityCode;
                 customerRequirement.ExternalRquestItem.ObjectNodeSenderTechnicalID = lineObjectDocId.ToString();
@@ -613,12 +606,24 @@ namespace ByDesignServices.Core.Services
                 customerRequirement.ExternalRquestItem.Description.Text = record.Description;
                 customerRequirement.ExternalRquestItem.Description.LanguageCode = "EN";
                 customerRequirement.ExternalRquestItem.RequestedQuantity.Text = record.RequestedQuantity;
+                customerRequirement.ExternalRquestItem.RequestedQuantity.UnitCode = "XCT";
                 customerRequirement.ExternalRquestItem.RequestedLocalDateTime.Text = Convert.ToDateTime(record.RequestedLocalDateTime).ToString("s") + "Z";
-                customerRequirement.ExternalRquestItem.RequestedLocalDateTime.TimeZoneCode = "UTC";
+                customerRequirement.ExternalRquestItem.RequestedLocalDateTime.TimeZoneCode = "UTC+1";
 
                 customerRequirements.CustomerRequirements.Add(customerRequirement);
                 lineObjectDocId += 1;
                 itemId += 10;
+
+                if (model.RaiseSalesQuote)
+                {
+                    quotesLineItems.Add(new SalesQuoteLine
+                    {
+                        ExternalReference = model.ExternalReference,
+                        ProductId = record.ProductID,
+                        Quantity = record.RequestedQuantity,
+                        TaxCode = record.TaxCode
+                    });
+                }
             }
 
             var customerRequirementXml = HelperExtensions.SerializeToXml(customerRequirements);
@@ -652,6 +657,14 @@ namespace ByDesignServices.Core.Services
 
                 element.InnerXml = sb.ToString();
 
+                var customerReqNodes = doc.SelectNodes("//CustomerRequirement");
+                foreach(XmlNode node in customerReqNodes)
+                {
+                    XmlAttribute attribute = node.OwnerDocument.CreateAttribute("ActionCode");
+                    attribute.Value = "01";
+                    node.Attributes.Append(attribute);
+                }
+
                 //var basicMsgNode = doc.CreateNode(XmlNodeType.Element, "BasicMessageHeader", null);
                 //XmlNode customerRequirementNode = doc.SelectSingleNode("//CustomerRequirement");
                 //element.InsertBefore(basicMsgNode, customerRequirementNode);
@@ -675,11 +688,121 @@ namespace ByDesignServices.Core.Services
                 if (response.IsSuccessStatusCode)
                 {
                     var responseData = await response.Content.ReadAsStreamAsync();
-                    return Tuple.Create((int)response.StatusCode, responseData);
+                    if (quotesLineItems.Count > 0)
+                    {
+                        var salesQuoteRequest = await PostSalesQuote(new SalesQuoteHeader
+                        {
+                            AccountId = model.AccountId,
+                            Description = model.Description,
+                            DistributionChannelCode = model.DistributionChannelCode,
+                            EmployeeResponsible = model.EmployeeResponsible,
+                            ExternalReference = model.ExternalReference,
+                            PostingDate = model.PostingDate.ToString(),
+                            RequestedDate = model.RequestedDate.Value.ToString(),
+                            SalesUnitId = model.SalesUnitId
+                        }, quotesLineItems);
+
+                        return salesQuoteRequest;
+                    }
+                    return responseData;
+                }
+            }
+
+            return null;
+        }
+
+        public async Task<Stream> PostSalesQuote(SalesQuoteHeader model, List<SalesQuoteLine> lineItems)
+        {
+            var customerQuote = new CustomerQuote();
+
+            customerQuote.ObjectNodeSenderTechnicalID = model.ExternalReference;
+            customerQuote.BuyerID = model.ExternalReference;
+            customerQuote.Name = model.Description;
+            customerQuote.PostingDate = Convert.ToDateTime(model.PostingDate).ToString("s") + "Z";
+            customerQuote.DataOriginTypeCode = "4";
+            customerQuote.AccountParty.PartyID = model.AccountId;
+            customerQuote.BillToParty.PartyID = model.AccountId;
+            customerQuote.EmployeeResponsibleParty.PartyID = model.EmployeeResponsible;
+            customerQuote.SalesUnitParty.PartyID = model.SalesUnitId;
+            customerQuote.SalesAndServiceBusinessArea.DistributionChannelCode = model.DistributionChannelCode;
+            customerQuote.RequestedFulfillmentPeriodPeriodTerms.StartDateTime.Text = Convert.ToDateTime(model.RequestedDate).ToString("s") + "Z";
+            customerQuote.RequestedFulfillmentPeriodPeriodTerms.StartDateTime.TimeZoneCode = "UTC+1";
+
+            var lineId = 10;
+            foreach (var lineItem in lineItems)
+            {
+                var item = new Items();
+                item.ID = lineId.ToString();
+                item.ItemProduct.ProductInternalID = lineItem.ProductId;
+                item.ItemScheduleLine.Quantity.Text = lineItem.Quantity;
+                item.ItemScheduleLine.Quantity.UnitCode = "XCT";
+                item.PriceAndTaxCalculationItem.TaxationCharacteristicsCode.Text = lineItem.TaxCode;
+                item.PriceAndTaxCalculationItem.TaxationCharacteristicsCode.ListID = "1";
+
+                customerQuote.Items.Add(item);
+                lineId += 10;
+            }
+
+            var customerQuoteXml = HelperExtensions.SerializeToXml(customerQuote);
+
+            string filePath = Path.Combine(HostingEnvironment.ContentRootPath, "xmlfiles/salesQuote.xml");
+
+            XmlDocument doc = new XmlDocument();
+            doc.Load(filePath);
+            var nsmgr = new XmlNamespaceManager(doc.NameTable);
+            nsmgr.AddNamespace("soapenv", "http://schemas.xmlsoap.org/soap/envelope/");
+            nsmgr.AddNamespace("glob", "http://sap.com/xi/SAPGlobal20/Global");
+
+            var element = doc.SelectSingleNode("/soapenv:Envelope/soapenv:Body/glob:CustomerQuoteBundleMaintainRequest_sync", nsmgr);
+
+            if (element != null)
+            {
+                var subDoc = new XmlDocument();
+                subDoc.LoadXml(customerQuoteXml);
+                var nsmgr1 = new XmlNamespaceManager(subDoc.NameTable);
+                nsmgr1.AddNamespace("xsd", "http://www.w3.org/2001/XMLSchema");
+                nsmgr1.AddNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
+
+                var cqNode = subDoc.SelectSingleNode("//CustomerQuote", nsmgr1);
+                var sb = new StringBuilder();
+                sb.AppendLine("<CustomerQuote>");
+                sb.AppendLine(cqNode.InnerXml);
+                sb.AppendLine("</CustomerQuote>");
+                element.InnerXml = sb.ToString();
+
+                var sqItemNodes = doc.SelectNodes("//CustomerQuote/Items");
+                foreach (XmlNode node in sqItemNodes)
+                {
+                    XmlAttribute attribute = node.OwnerDocument.CreateAttribute("itemScheduleLineListCompleteTransmissionIndicator");
+                    attribute.Value = "true";
+                    node.Attributes.Append(attribute);
                 }
 
-                var errorResonseData = await response.Content.ReadAsStreamAsync();
-                return Tuple.Create((int)response.StatusCode, errorResonseData);
+                var basicMsgNode = doc.CreateNode(XmlNodeType.Element, "BasicMessageHeader", null);
+                XmlNode customerQuoteNode = doc.SelectSingleNode("//CustomerQuote");
+                element.InsertBefore(basicMsgNode, customerQuoteNode);
+                doc.Save(filePath);
+
+                StreamReader sr = new StreamReader(filePath);
+                string soapXml = sr.ReadToEnd();
+                sr.Close();
+
+                var tenantSetting = await _tenantSettingService.GetSetting();
+                UriBuilder urlBuilder = new UriBuilder(tenantSetting.BaseUrl)
+                {
+                    Path = "/sap/bc/srt/scs/sap/managecustomerquotein"
+                };
+                var request = new HttpRequestMessage(HttpMethod.Post, urlBuilder.ToString());
+                request.Headers.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("text/xml"));
+                var byteArray = Encoding.ASCII.GetBytes($"{tenantSetting.User}:{tenantSetting.Password}");
+                request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+                request.Content = new StringContent(soapXml, Encoding.UTF8, "text/xml");
+                var response = await _client.HttpClient.SendAsync(request);
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseData = await response.Content.ReadAsStreamAsync();
+                    return responseData;
+                }
             }
 
             return null;
@@ -708,6 +831,27 @@ namespace ByDesignServices.Core.Services
 
                 default:
                     code = "3";
+                    break;
+            }
+
+            return code;
+        }
+
+        private string GetDistributionChannelValue(string name)
+        {
+            string code;
+            switch (name)
+            {
+                case "Direct Sales":
+                    code = "01";
+                    break;
+
+                case "Indirect Sales":
+                    code = "02";
+                    break;
+
+                default:
+                    code = "01";
                     break;
             }
 

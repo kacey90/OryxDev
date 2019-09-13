@@ -5,7 +5,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20190906093643_Initial.cs" />
+    <Compile Remove="Migrations\20190906093643_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20190906094817_Initial.cs" />
+    <Compile Remove="Migrations\20190906094817_Initial.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CsvHelper" Version="12.1.2" />
+    <PackageReference Include="Dapper" Version="2.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.2.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.6" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
   </ItemGroup>
 

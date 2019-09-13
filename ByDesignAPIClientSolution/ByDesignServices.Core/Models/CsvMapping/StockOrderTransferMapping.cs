@@ -18,7 +18,7 @@ namespace ByDesignServices.Core.Models.CsvMapping
             Map(s => s.RequestedQuantity).Name("Requested Quantity");
             Map(s => s.RequestedLocalDateTime).Name("Requested Delivery Date");
             Map(s => s.Description).Name("Product Description");
-            Map(s => s.TaxCode).Name("Tax Code").Ignore();
+            Map(s => s.TaxCode).Name("Tax Code");
         }
     }
 }

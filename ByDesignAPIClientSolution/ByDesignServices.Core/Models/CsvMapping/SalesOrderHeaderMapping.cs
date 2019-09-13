@@ -10,14 +10,15 @@ namespace ByDesignServices.Core.Models.CsvMapping
     {
         public SalesOrderHeaderMapping()
         {
-            Map(s => s.ExternalReference).Name("ExternalReference");
-            Map(s => s.Name).Name("Name");
-            Map(s => s.DataOriginTypeCode).Name("DataOriginTypeCode");
-            Map(s => s.DeliveryPriorityCode).Name("DeliveryPriorityCode");
-            Map(s => s.SalesUnitPartyId).Name("SalesUnit");
-            Map(s => s.BuyerPartyId).Name("BuyerPartyId");
-            Map(s => s.StartDate).Name("StartDate");
-            Map(s => s.EndDate).Name("EndDate");
+            Map(s => s.ExternalReference).Name("External Reference");
+            Map(s => s.Name).Name("Description");
+            Map(s => s.DeliveryPriorityCode).Name("Delivery Priority");
+            Map(s => s.DistributionChannelCode).Name("Distribution Channel");
+            Map(s => s.SalesUnitPartyId).Name("Sales Unit");
+            Map(s => s.BuyerPartyId).Name("Account");
+            Map(s => s.EmployeeResponsible).Name("Employee Responsible");
+            Map(s => s.StartDate).Name("Date Requested");
+            Map(s => s.EndDate).Name("Posting Date");
         }
     }
 }

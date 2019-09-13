@@ -19,5 +19,14 @@ namespace ByDesignServices.Core.Models.StockTransfers
         public string RequestedLocalDateTime { get; set; }
         public string Description { get; set; }
         public string TaxCode { get; set; }
+
+        public bool RaiseSalesQuote { get; set; }
+        public string AccountId { get; set; }
+        public string ExternalReference { get; set; }
+        public string DistributionChannelCode { get; set; }
+        public DateTime? PostingDate { get; set; }
+        public DateTime? RequestedDate { get; set; }
+        public string SalesUnitId { get; set; }
+        public string EmployeeResponsible { get; set; }
     }
 }

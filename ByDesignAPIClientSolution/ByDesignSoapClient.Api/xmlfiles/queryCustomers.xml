@@ -1,0 +1,18 @@
+﻿<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:glob="http://sap.com/xi/SAPGlobal20/Global">
+  <soapenv:Header/>
+  <soapenv:Body>
+    <glob:EmployeeDataByIdentificationQuery_sync>
+      <!--Optional:-->
+      <EmployeeDataSelectionByIdentification>
+        <!--Optional:-->
+        <SelectionBySearchText>*</SelectionBySearchText>
+      </EmployeeDataSelectionByIdentification>
+      <!--Optional:-->
+      <PROCESSING_CONDITIONS>
+        <!--Optional:-->
+        <QueryHitsMaximumNumberValue>200</QueryHitsMaximumNumberValue>
+        <QueryHitsUnlimitedIndicator>false</QueryHitsUnlimitedIndicator>
+      </PROCESSING_CONDITIONS>
+    </glob:EmployeeDataByIdentificationQuery_sync>
+  </soapenv:Body>
+</soapenv:Envelope>

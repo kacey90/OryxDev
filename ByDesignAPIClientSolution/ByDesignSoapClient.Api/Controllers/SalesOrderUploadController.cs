@@ -31,7 +31,7 @@ namespace ByDesignSoapClient.Api.Controllers
         public IHostingEnvironment Environment;
 
         [HttpPost, Route("UploadSalesOrder")]
-        public async Task<JsonResult> UploadSalesOrder(IFormFile file)
+        public async Task<IActionResult> UploadSalesOrder(IFormFile file)
         {
             if (file != null || file.Length > 0)
             {
@@ -40,15 +40,11 @@ namespace ByDesignSoapClient.Api.Controllers
                     file.CopyTo(ms);
                     ms.Seek(0, SeekOrigin.Begin);
 
-                    var response = await _applicationServices.UploadSingleSalesOrderAsync(ms);
+                    var response = await _applicationServices.UploadSalesOrderAsync(ms);
 
                     if (response != null)
                     {
-                        //if (response.Item1 == 200 || response.Item1 == 201)
-                        //    return new FileStreamResult(response.Item2, "text/xml") { FileDownloadName = "response.xml" };
-                        //else
-                        //    return new FileStreamResult(response.Item2, "text/plain") { FileDownloadName = "errorResponse.txt" };
-                        return new JsonResult(response);
+                        return Ok(response);
                     }
 
                 }
@@ -60,7 +56,7 @@ namespace ByDesignSoapClient.Api.Controllers
         }
 
         [HttpPost, Route("PostSalesOrder")]
-        public async Task<JsonResult> UploadSalesOrder([FromBody] SalesOrderViewModel model)
+        public async Task<IActionResult> UploadSalesOrder([FromForm] SalesOrderViewModel model)
         {
             if (model.FileTemplate != null || model.FileTemplate.Length > 0)
             {
@@ -75,15 +71,19 @@ namespace ByDesignSoapClient.Api.Controllers
                         Name = model.Description,
                         DataOriginTypeCode = model.DataOriginTypeCode,
                         DeliveryPriorityCode = model.DeliveryPriorityCode,
+                        DistributionChannelCode = model.DistributionChannelCode,
                         SalesUnitPartyId = model.SalesUnit,
-                        BuyerPartyId = model.BuyerParty,
+                        EmployeeResponsible = model.EmployeeResponsible,
+                        PostingDate = model.PostingDate.HasValue ? model.PostingDate.Value.ToString() : null,
+                        AccountId = model.AccountId,
+                        BuyerPartyId = model.ExternalReference,
                         StartDate = model.RequestedStartDate.Value.ToString("dd/MM/yyyy"),
-                        EndDate = model.RequestedEndDate.Value.ToString("dd/MM/yyyy")
+                        //EndDate = model.RequestedEndDate.Value.ToString("dd/MM/yyyy")
                     });
 
                     if (response != null)
                     {
-                        return new JsonResult(response);
+                        return Ok(response);
                     }
                 }
             }

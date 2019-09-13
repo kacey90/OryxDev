@@ -35,40 +35,137 @@
             <form asp-action="PostStockOrder" enctype="multipart/form-data" method="post">
                 <div class="card-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <div class="form-group">
-                        <label asp-for="ShipFromSiteID" class="control-label"></label>
-                        <input asp-for="ShipFromSiteID" class="form-control" />
-                        <span asp-validation-for="ShipFromSiteID" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="ShipToSiteID" class="control-label"></label>
-                        <input asp-for="ShipToSiteID" class="form-control" />
-                        <span asp-validation-for="ShipToSiteID" class="text-danger"></span>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="ShipFromSiteID" class="control-label"></label>
+                                <select asp-for="ShipFromSiteID" asp-items="@Model.Sites" class="form-control select2">
+                                    <option value="" selected disabled>Choose From Site</option>
+                                </select>
+                                <span asp-validation-for="ShipFromSiteID" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="ShipToSiteID" class="control-label"></label>
+                                <select asp-for="ShipToSiteID" asp-items="@Model.Sites" class="form-control select2">
+                                    <option value="" selected disabled>Choose To Site</option>
+                                </select>
+                                <span asp-validation-for="ShipToSiteID" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="ShipToLocationID" class="control-label"></label>
+                                <select asp-for="ShipToLocationID" asp-items="@Model.Locations" class="form-control select2">
+                                    <option value="" selected disabled>Choose To Location</option>
+                                </select>
+                                <span asp-validation-for="ShipToLocationID" class="text-danger"></span>
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group form-check">
                         <label class="form-check-label">
                             <input class="form-check-input" asp-for="CompleteDeliveryRequestedIndicator" /> @Html.DisplayNameFor(model => model.CompleteDeliveryRequestedIndicator)
                         </label>
                     </div>
-                    <div class="form-group">
-                        <label asp-for="DeliveryPriorityCode" class="control-label"></label>
-                        <select asp-for="DeliveryPriorityCode" class="form-control">
-                            <option selected disabled>Choose One</option>
-                            <option value="1">Immediate</option>
-                            <option value="2">Urgent</option>
-                            <option value="3">Normal</option>
-                            <option value="7">Low</option>
-                        </select>
-                        <span asp-validation-for="DeliveryPriorityCode" class="text-danger"></span>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-md-3 col-form-label" for="file-input">Upload Template</label>
-                        <div class="col-md-9">
-                            <input type="file" asp-for="FileTemplate" name="FileTemplate">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="DeliveryPriorityCode" class="control-label"></label>
+                                <select asp-for="DeliveryPriorityCode" class="form-control">
+                                    <option selected disabled>Choose One</option>
+                                    <option value="1">Immediate</option>
+                                    <option value="2">Urgent</option>
+                                    <option value="3">Normal</option>
+                                    <option value="7">Low</option>
+                                </select>
+                                <span asp-validation-for="DeliveryPriorityCode" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label" for="file-input">Upload Template</label>
+                                <div class="col-md-9">
+                                    <input type="file" asp-for="FileTemplate" name="FileTemplate">
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="RaiseSalesQuote" /> @Html.DisplayNameFor(model => model.RaiseSalesQuote)
+                            
+                        </label>
+                    </div>
                 </div>
+                <div id="salesQuoteDiv" style="display: none">
+                    <div class="card-header">
+                        <strong>Sales Quote</strong>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="AccountId" class="control-label"></label>
+                                    <input asp-for="AccountId" class="form-control" />
+                                    <span asp-validation-for="AccountId" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="ExternalReference" class="control-label"></label>
+                                    <input asp-for="ExternalReference" class="form-control" />
+                                    <span asp-validation-for="ExternalReference" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="DistributionChannelCode" class="control-label"></label>
+                                    <select asp-for="DistributionChannelCode" class="form-control">
+                                        <option selected disabled>Choose One</option>
+                                        <option value="01">Direct Sales</option>
+                                        <option value="02">Indirect Sales</option>
+                                    </select>
+                                    <span asp-validation-for="DistributionChannelCode" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="PostingDate" class="control-label"></label>
+                                    <input asp-for="PostingDate" class="form-control" />
+                                    <span asp-validation-for="PostingDate" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="EmployeeResponsible" class="control-label"></label><br />
+                                    <select asp-for="EmployeeResponsible" asp-items="@Model.Employees" class="form-control select2">
+                                        <option selected disabled value="">Choose Employee Responsible</option>
+                                    </select>
+                                    <span asp-validation-for="EmployeeResponsible" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="SalesUnitId" class="control-label"></label>
+                                    <input asp-for="SalesUnitId" class="form-control" />
+                                    <span asp-validation-for="SalesUnitId" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="RequestedDate" class="control-label"></label>
+                            <input asp-for="RequestedDate" class="form-control" />
+                            <span asp-validation-for="RequestedDate" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="card-footer">
                     <div class="form-group">
                         <input type="submit" value="Create" class="btn btn-primary" />
@@ -78,4 +175,32 @@
         </div>
     </div>
 </div>
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
 
+    <script>
+        //function toggleDiv() {
+        //    var x = document.getElementById("salesQuoteDiv");
+        //    if (x.style.display === "none") {
+        //        x.style.display = "block";
+        //    } else {
+        //        x.style.display = "none";
+        //    }
+        //}
+
+        $(document).ready(function () {
+            $('#salesQuoteDiv').hide();
+
+            $('#RaiseSalesQuote').change(function () {
+                $('#salesQuoteDiv').toggle();
+            })
+
+            if ($('#RaiseSalesQuote').prop("checked") == true) {
+                $('#salesQuoteDiv').show();
+            }
+            else {
+                $('#salesQuoteDiv').hide();
+            }
+        });
+    </script>
+}

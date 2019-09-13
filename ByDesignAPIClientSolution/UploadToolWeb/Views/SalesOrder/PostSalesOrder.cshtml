@@ -1,7 +1,7 @@
 ﻿@model ByDesignSoapClient.Api.Models.SalesOrderViewModel
 
 @{
-    ViewData["Title"] = "PostSalesOrder";
+    ViewData["Title"] = "Post Sales Order";
 }
 
 @section Breadcrumbs{
@@ -16,7 +16,7 @@
         <!-- Breadcrumb Menu-->
         <li class="breadcrumb-menu d-md-down-none">
             <div class="btn-group" role="group" aria-label="Button group">
-                <a class="btn" href="~/lib/docs/sales_order_lines.csv">
+                <a class="btn" href="~/lib/docs/SOLineItemsTemplate.csv">
                     <i class="icon-cloud-download"></i> <strong>Download CSV Template</strong>
                 </a>
             </div>
@@ -32,10 +32,19 @@
             </div>
             <form asp-action="PostSalesOrder" enctype="multipart/form-data">
                 <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label asp-for="AccountId" class="control-label"></label>
+                            <select asp-for="AccountId" asp-items="@Model.Customers" class="form-control select2">
+                                <option value="" selected disabled>Select Customer</option>
+                            </select>
+                            <span asp-validation-for="AccountId", class="text-danger"></span>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                 <label asp-for="ExternalReference" class="control-label"></label>
                                 <input asp-for="ExternalReference" class="form-control" />
                                 <span asp-validation-for="ExternalReference" class="text-danger"></span>
@@ -43,25 +52,9 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label asp-for="BuyerParty" class="control-label"></label>
-                                <input asp-for="BuyerParty" class="form-control" />
-                                <span asp-validation-for="BuyerParty" class="text-danger"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
                                 <label asp-for="Description" class="control-label"></label>
                                 <input asp-for="Description" class="form-control" />
                                 <span asp-validation-for="Description" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label asp-for="PostingDate" class="control-label"></label>
-                                <input asp-for="PostingDate" class="form-control" />
-                                <span asp-validation-for="PostingDate" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
@@ -74,51 +67,66 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label asp-for="RequestedEndDate" class="control-label"></label>
-                                <input asp-for="RequestedEndDate" class="form-control" />
-                                <span asp-validation-for="RequestedEndDate" class="text-danger"></span>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="PostingDate" class="control-label"></label>
+                                    <input asp-for="PostingDate" class="form-control" />
+                                    <span asp-validation-for="PostingDate" class="text-danger"></span>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label asp-for="DataOriginTypeCode" class="control-label"></label>
-                                <input asp-for="DataOriginTypeCode" class="form-control" />
-                                <span asp-validation-for="DataOriginTypeCode" class="text-danger"></span>
-                            </div>
-                        </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label asp-for="DeliveryPriorityCode" class="control-label"></label>
-                                <input asp-for="DeliveryPriorityCode" class="form-control" />
+                                <select asp-for="DeliveryPriorityCode" class="form-control">
+                                    <option selected disabled>Choose One</option>
+                                    <option value="1">Immediate</option>
+                                    <option value="2">Urgent</option>
+                                    <option value="3">Normal</option>
+                                    <option value="7">Low</option>
+                                </select>
                                 <span asp-validation-for="DeliveryPriorityCode" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="FileTemplate" name="FileTemplate">Upload Line items</label>
+                                <div class="col-md-9">
+                                    <input type="file" name="FileTemplate">
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
+                            <label asp-for="DistributionChannelCode" class="control-label"></label>
+                            <select asp-for="DistributionChannelCode" class="form-control">
+                                <option selected disabled>Choose One</option>
+                                <option value="01">Direct Sales</option>
+                                <option value="02">Indirect Sales</option>
+                            </select>
+                            <span asp-validation-for="DistributionChannelCode" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label asp-for="SalesUnit" class="control-label"></label>
                                 <input asp-for="SalesUnit" class="form-control" />
                                 <span asp-validation-for="SalesUnit" class="text-danger"></span>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label asp-for="EmployeeResponsible" class="control-label"></label>
-                                <input asp-for="EmployeeResponsible" class="form-control" />
+                                <select asp-for="EmployeeResponsible" asp-items="@Model.Employees" class="form-control select2">
+                                    <option value="" selected disabled>Select Employee</option>
+                                </select>
                                 <span asp-validation-for="EmployeeResponsible" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label asp-for="FileTemplate" name="FileTemplate">Upload Line items</label>
-                        <div class="col-md-9">
-                            <input type="file" name="FileTemplate">
-                        </div>
-                    </div>
+
                 </div>
                 <div class="card-footer">
                     <button type="submit" class="btn btn-primary">
@@ -129,4 +137,8 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
 

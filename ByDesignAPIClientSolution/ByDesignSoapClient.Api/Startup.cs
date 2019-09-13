@@ -2,13 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Threading;
 using System.Threading.Tasks;
+using ByDesignServices.Core.DBModels;
 using ByDesignServices.Core.Services;
+using ByDesignServices.Core.Services.DataAccess;
 using ByDesignServices.Core.Utilities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -32,9 +36,14 @@ namespace ByDesignSoapClient.Api
             services.AddHttpClient<ByDesignHttpClient>(client =>
             {
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.Timeout = Timeout.InfiniteTimeSpan;
             });
             services.AddScoped<IApplicationServices, ApplicationServices>();
             services.AddScoped<ITenantSettingService, TenantSettingService>();
+            services.AddScoped<IDataServices, DataServices>();
+            var connectionString = Configuration["Data:Connection"];
+            services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionString));
+            services.AddScoped<ISqlConnectionFactory>(s => new SqlConnectionFactory(connectionString));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
